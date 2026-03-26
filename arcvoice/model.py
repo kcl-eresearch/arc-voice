@@ -93,7 +93,7 @@ def transcribe(audio_bytes: bytes, filename: str) -> str:
     if not text_tokens:
         raise RuntimeError("Model produced no text output")
 
-    text = processor.decode_text(torch.cat(text_tokens))
+    text = processor.text.decode(torch.cat(text_tokens).tolist())
     return text.strip()
 
 
