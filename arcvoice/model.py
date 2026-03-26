@@ -31,7 +31,12 @@ def get_model_and_processor() -> tuple[LFM2AudioModel, LFM2AudioProcessor]:
             if _model is None:
                 logger.info("Loading model %s on %s ...", settings.model_id, settings.device)
                 _processor = LFM2AudioProcessor.from_pretrained(settings.model_id).eval()
-                _model = LFM2AudioModel.from_pretrained(settings.model_id).eval()
+                load_kwargs = {}
+                if settings.attn_implementation:
+                    load_kwargs["attn_implementation"] = settings.attn_implementation
+                _model = LFM2AudioModel.from_pretrained(
+                    settings.model_id, **load_kwargs
+                ).eval()
                 if settings.device != "cpu":
                     _model = _model.to(settings.device)
                 logger.info("Model loaded.")

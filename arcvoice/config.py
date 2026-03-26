@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     port: int = 8000
     api_key: str | None = None
     device: str = "cuda"
+    attn_implementation: str | None = None  # "sdpa", "flash_attention_2", "eager", or None (auto)
     # Generation defaults
     max_new_tokens: int = 512
     audio_temperature: float = 1.0
