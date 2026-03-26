@@ -113,7 +113,7 @@ def waveform_to_bytes(waveform: torch.Tensor, fmt: str = "wav") -> bytes:
     # write to a temporary file with the correct extension instead.
     with tempfile.TemporaryDirectory() as tmpdir:
         path = Path(tmpdir) / f"out.{fmt}"
-        torchaudio.save(str(path), waveform, SAMPLE_RATE, format=fmt)
+        torchaudio.save(str(path), waveform, SAMPLE_RATE)
         return path.read_bytes()
 
 
