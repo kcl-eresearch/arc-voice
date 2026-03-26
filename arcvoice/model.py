@@ -44,7 +44,7 @@ def synthesize(text: str) -> torch.Tensor:
 
     chat = ChatState(processor)
     chat.new_turn("system")
-    chat.add_text("Perform TTS.")
+    chat.add_text("Perform TTS. Use the UK male voice.")
     chat.end_turn()
 
     chat.new_turn("user")

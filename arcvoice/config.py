@@ -11,8 +11,8 @@ class Settings(BaseSettings):
     device: str = "cuda"
     # Generation defaults
     max_new_tokens: int = 512
-    audio_temperature: float = 1.0
-    audio_top_k: int = 4
+    audio_temperature: float = 0.8
+    audio_top_k: int = 64
 
 
 settings = Settings()
