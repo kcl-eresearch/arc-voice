@@ -30,8 +30,8 @@ def get_model_and_processor() -> tuple[LFM2AudioModel, LFM2AudioProcessor]:
         with _lock:
             if _model is None:
                 logger.info("Loading model %s on %s ...", settings.model_id, settings.device)
-                _processor = LFM2AudioProcessor.from_pretrained(settings.model_id)
-                _model = LFM2AudioModel.from_pretrained(settings.model_id)
+                _processor = LFM2AudioProcessor.from_pretrained(settings.model_id).eval()
+                _model = LFM2AudioModel.from_pretrained(settings.model_id).eval()
                 if settings.device != "cpu":
                     _model = _model.to(settings.device)
                 logger.info("Model loaded.")
@@ -43,13 +43,17 @@ def synthesize(text: str) -> torch.Tensor:
     model, processor = get_model_and_processor()
 
     chat = ChatState(processor)
+    chat.new_turn("system")
+    chat.add_text("Perform TTS.")
+    chat.end_turn()
+
     chat.new_turn("user")
-    chat.add_text(f"[TTS]{text}")
+    chat.add_text(text)
     chat.end_turn()
 
     chat.new_turn("assistant")
     audio_tokens: list[torch.Tensor] = []
-    for token in model.generate_interleaved(
+    for token in model.generate_sequential(
         **chat,
         max_new_tokens=settings.max_new_tokens,
         audio_temperature=settings.audio_temperature,
@@ -79,14 +83,17 @@ def transcribe(audio_bytes: bytes, filename: str) -> str:
         waveform, sr = torchaudio.load(str(path))
 
     chat = ChatState(processor)
+    chat.new_turn("system")
+    chat.add_text("Perform ASR.")
+    chat.end_turn()
+
     chat.new_turn("user")
     chat.add_audio(waveform, sr)
-    chat.add_text("[ASR]")
     chat.end_turn()
 
     chat.new_turn("assistant")
     text_tokens: list[torch.Tensor] = []
-    for token in model.generate_interleaved(
+    for token in model.generate_sequential(
         **chat,
         max_new_tokens=settings.max_new_tokens,
     ):
