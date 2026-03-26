@@ -67,7 +67,7 @@ async def create_speech(req: SpeechRequest) -> Response:
 # ---------------------------------------------------------------------------
 
 
-@router.post("/transcriptions")
+@router.post("/transcriptions", response_model=None)
 async def create_transcription(
     file: UploadFile = File(...),
     model: str = Form("lfm2-audio-1.5b"),
