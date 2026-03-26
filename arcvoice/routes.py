@@ -39,7 +39,7 @@ async def create_speech(req: SpeechRequest) -> Response:
     logger.info("TTS request: %d chars, format=%s", len(req.input), req.response_format)
 
     try:
-        waveform = synthesize(req.input)
+        waveform = synthesize(req.input, voice=req.voice)
     except Exception:
         logger.exception("TTS synthesis failed")
         raise HTTPException(status_code=500, detail="Speech synthesis failed")

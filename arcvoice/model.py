@@ -38,13 +38,13 @@ def get_model_and_processor() -> tuple[LFM2AudioModel, LFM2AudioProcessor]:
     return _model, _processor
 
 
-def synthesize(text: str) -> torch.Tensor:
+def synthesize(text: str, voice: str = "male") -> torch.Tensor:
     """Run TTS: convert text to a waveform tensor (1, T) at 24kHz."""
     model, processor = get_model_and_processor()
 
     chat = ChatState(processor)
     chat.new_turn("system")
-    chat.add_text("Perform TTS. Use the UK male voice.")
+    chat.add_text(f"Perform TTS. Use the UK {voice} voice.")
     chat.end_turn()
 
     chat.new_turn("user")
