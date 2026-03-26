@@ -71,9 +71,12 @@ def transcribe(audio_bytes: bytes, filename: str) -> str:
     """Run ASR: transcribe audio bytes to text."""
     model, processor = get_model_and_processor()
 
-    # Load audio from bytes buffer
-    buf = io.BytesIO(audio_bytes)
-    waveform, sr = torchaudio.load(buf, format=_guess_format(filename))
+    # torchcodec backend cannot load from BytesIO; use a temp file.
+    fmt = _guess_format(filename) or "wav"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / f"input.{fmt}"
+        path.write_bytes(audio_bytes)
+        waveform, sr = torchaudio.load(str(path))
 
     chat = ChatState(processor)
     chat.new_turn("user")
