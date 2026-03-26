@@ -1,0 +1,31 @@
+[project]
+name = "arcvoice"
+version = "0.1.0"
+description = "OpenAI-compatible TTS and transcription API powered by Liquid AI LFM2.5-Audio-1.5B"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "liquid-audio",
+    "torch",
+    "torchaudio",
+    "python-multipart",
+    "pydantic>=2",
+    "pydantic-settings>=2",
+    "flash-attn>=2.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pytest",
+    "httpx",
+]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
