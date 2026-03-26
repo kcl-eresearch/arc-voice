@@ -7,15 +7,18 @@ Drop-in replacement for OpenAI's `/v1/audio/speech` and `/v1/audio/transcription
 ## Requirements
 
 - Python 3.10+
-- CUDA GPU (required by `flash-attn`)
+- CUDA GPU recommended
 
 ## Installation
 
 ```bash
-uv pip install --no-build-isolation -e .
+uv pip install -e .
 
 # For development (ruff, pytest, httpx)
-uv pip install --no-build-isolation -e ".[dev]"
+uv pip install -e ".[dev]"
+
+# Recommended: install flash-attn for faster inference (requires CUDA)
+uv pip install --no-build-isolation flash-attn>=2.7
 ```
 
 ## Quick Start

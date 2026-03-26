@@ -9,8 +9,11 @@ ArcVoice is an OpenAI-compatible TTS and speech transcription (ASR) API server p
 ## Commands
 
 ```bash
-# Install dependencies (--no-build-isolation needed for flash-attn)
-uv pip install --no-build-isolation -e ".[dev]"
+# Install dependencies
+uv pip install -e ".[dev]"
+
+# Recommended: install flash-attn for faster inference (requires CUDA)
+uv pip install --no-build-isolation flash-attn>=2.7
 
 # Run the server
 python -m arcvoice.app
@@ -43,7 +46,7 @@ The model interaction pattern uses `ChatState` from `liquid_audio`: a conversati
 ## Key Dependencies
 
 - `liquid-audio` — Liquid AI model/processor (`LFM2AudioModel`, `LFM2AudioProcessor`, `ChatState`)
-- `flash-attn>=2.7` — required for model inference (needs CUDA)
+- `flash-attn>=2.7` — optional, recommended for faster inference (needs CUDA)
 - `torchaudio` — audio I/O and format encoding
 
 ## Ruff Config
