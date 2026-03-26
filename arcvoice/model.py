@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import io
 import logging
+import tempfile
+from pathlib import Path
 from threading import Lock
 
 import torch
@@ -97,11 +99,12 @@ def transcribe(audio_bytes: bytes, filename: str) -> str:
 
 def waveform_to_bytes(waveform: torch.Tensor, fmt: str = "wav") -> bytes:
     """Encode a waveform tensor to audio bytes in the requested format."""
-    buf = io.BytesIO()
-    # torchaudio supports wav, flac, ogg (vorbis), mp3 (if ffmpeg available)
-    torchaudio.save(buf, waveform, SAMPLE_RATE, format=fmt)
-    buf.seek(0)
-    return buf.read()
+    # Newer torchaudio backends (torchcodec) cannot write to BytesIO directly;
+    # write to a temporary file with the correct extension instead.
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / f"out.{fmt}"
+        torchaudio.save(str(path), waveform, SAMPLE_RATE, format=fmt)
+        return path.read_bytes()
 
 
 def _guess_format(filename: str) -> str | None:
