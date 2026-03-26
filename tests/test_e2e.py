@@ -10,7 +10,10 @@ pytestmark = [
 ]
 
 
-@pytest.fixture(params=["Hello world.", "The quick brown fox jumps over the lazy dog."])
+@pytest.fixture(params=[
+    "The rain in Spain stays mainly in the plain.",
+    "The quick brown fox jumps over the lazy dog.",
+])
 def sample_text(request):
     return request.param
 
